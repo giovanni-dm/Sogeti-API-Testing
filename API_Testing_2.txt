@@ -1,0 +1,47 @@
+// Test Data
+const testData = [
+    { Country: "us", PostalCode: "90210", PlaceName: "Beverly Hills" },
+    { Country: "us", PostalCode: "12345", PlaceName: "Schenectady" },
+    { Country: "ca", PostalCode: "B2R", PlaceName: "Waverley" }
+];
+
+pm.test("Data Driven Tests", function () {
+    let passedTests = [];
+    
+    // Loop through test data
+    testData.forEach(function (data) {
+        pm.environment.set("Country", data.Country);
+        pm.environment.set("PostalCode", data.PostalCode);
+        
+        pm.sendRequest(`http://api.zippopotam.us/${data.Country}/${data.PostalCode}`, function (err, response) {
+            // Check for no errors in the response
+            pm.expect(err).to.be.null;
+            
+            // Verify that the response status code is 200
+            pm.expect(response.code).to.eql(200);
+            
+            // Verify that the response content type is JSON
+            pm.expect(response.headers.get('Content-Type')).to.include('application/json');
+            
+            // Verify that the response time is below 1s
+            pm.expect(response.responseTime).to.be.below(1000);
+            
+            // Parse the response JSON
+            let jsonData = response.json();
+            
+            // Verify that the Place Name matches
+            let placeName = jsonData.places[0]['place name'];
+            pm.expect(placeName).to.eql(data.PlaceName);
+            
+            passedTests.push({
+                Country: data.Country,
+                PostalCode: data.PostalCode,
+                PlaceName: data.PlaceName,
+                Status: 'Passed'
+            });
+        });
+    });
+
+    // Log the results
+    console.log(passedTests);
+});

@@ -1,0 +1,23 @@
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Content-Type is application/json", function () {
+    pm.response.to.have.header("Content-Type", "application/json");
+});
+
+pm.test("Response time is below 1000ms", function () {
+    pm.expect(pm.response.responseTime).to.be.below(1000);
+});
+
+pm.test("Verify country is Germany and state is Baden-Württemberg", function () {
+    const jsonData = pm.response.json();
+    pm.expect(jsonData.country).to.eql("Germany");
+    pm.expect(jsonData.places[0].state).to.eql("Baden-Württemberg");
+});
+
+pm.test("Verify place name for Post Code 70597 is Stuttgart Degerloch", function () {
+    const jsonData = pm.response.json();
+    let placeFound = jsonData.places.find(place => place['post code'] === '70597');
+    pm.expect(placeFound['place name']).to.eql("Stuttgart Degerloch");
+});
