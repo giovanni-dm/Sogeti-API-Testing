@@ -5,7 +5,7 @@
 5. Add a request
 
 
-1. Test case
+First Test case
 
 1. Send the request as GET to  http://api.zippopotam.us/de/bw/stuttgart
 2. In the Script section copy and paste the content of the file API_Testing_1
@@ -13,7 +13,7 @@
 4. Check the test results 
 
 
-2. Test case
+Second Test case
 
 1. Set the two environment variables "country"  and "postal code", clicking on the top right of the screen, on "environment quick look" and edit
 2. In the script section copy and paste the content of the file API_Testing_2
